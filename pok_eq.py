@@ -47,13 +47,14 @@ def array_total_2d(array,index):
     return total
 
 
-def Possible_HP(stat_arr):
+def Possible_HP(stat_arr,req_stats):
     possible_types = [[0 for i in range(0,2)] for j in range(0,16)]
     possible_stats = [2,3,6,7,10,11,14,15,18,19,22,23,26,27,30,31]
+    PS_split = [1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0]
     set_stats = []
     damage_check = 0
     for i in range(len(stat_arr)):
-        if stat_arr[i] == 0:
+        if stat_arr[i] == None:
             set_stats.append(i)
         else:
             temp = bin(stat_arr[i])
@@ -68,28 +69,32 @@ def Possible_HP(stat_arr):
                 type_value = Hidden_power_type(stat_arr)  
                 possible_types[type_value][0] += 1
                 if damage_check == 3:
-                    if Hidden_power_damage(stat_arr) == 70:
-                        possible_types[type_value][1] += 1
+                    if type_value > 9 and stat_arr[3] >= req_stats[3]: 
+                        if Hidden_power_damage(stat_arr) == 70:
+                            possible_types[type_value][1] += 1
+                    if type_value < 10 and stat_arr[1] >= req_stats[1]:
+                        if Hidden_power_damage(stat_arr) == 70:
+                            possible_types[type_value][1] += 1
                         #possible_types[type_value].append(stat_arr)
     return possible_types
 
 
 
-def stat_generator(grouped_stats):
+def stat_generator(grouped_stats,req_stats):
     pointers = [[0,0],[1,0],[2,0]]
     type_dist = [[0 for i in range(0,2)] for j in range(0,16)]
     temp_array = []
     while True:
-        stat_set = [0,0,0,0,0,0]
+        stat_set = [None,None,None,None,None,None]
         stat_set[pointers[0][0]] = grouped_stats[pointers[0][0]][pointers[0][1]]
         stat_set[pointers[1][0]] = grouped_stats[pointers[1][0]][pointers[1][1]]
         stat_set[pointers[2][0]] = grouped_stats[pointers[2][0]][pointers[2][1]]
 
-        temp_array = Possible_HP(stat_set)
+        temp_array = Possible_HP(stat_set,req_stats)
         for i in range(0,16):
             for j in range(0,2):
                 type_dist[i][j] += temp_array[i][j]
-
+        #print(stat_set)
         #increment pointer 3
         if pointers[2][1] == 0:
             pointers[2][1] = 1
@@ -124,14 +129,18 @@ def stat_generator(grouped_stats):
             
     return type_dist
     
-def HP_from_parents(parent1,parent2):
+def HP_from_parents(parent1,parent2,req_stats):
     type_arr = ["Fighting","Flying","Poision","Ground","Rock","Bug","Ghost","Steel","Fire","Water","Grass","Electric","Psychic","Ice","Dragon","Dark"]
     spacing = ("          ")
     grouped_stats = [[0 for i in range(0,2)] for j in range(0,6)]
     for i in range(0,6):
+        if parent1[i] > 31:
+            parent1[i] = 31
+        if parent2[i] > 31:
+            parent2[i] = 31
         grouped_stats[i][0] = parent1[i]
         grouped_stats[i][1] = parent2[i]
-    data_set = stat_generator(grouped_stats)
+    data_set = stat_generator(grouped_stats,req_stats)
     total = array_total_2d(data_set,0)
     for i in range(0,16):
         if data_set[i][0] != 0:
@@ -164,5 +173,4 @@ def main():
     print("-------------------------")
     print("|   TYPE   |  TYPE PROB  |  MAX DAMAGE PROB  |")
     HP_from_parents(P1_stats,P2_stats)    
-
 
