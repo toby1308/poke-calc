@@ -59,7 +59,7 @@ window.title("PBP")
 window.geometry("520x460")
 
 
-title_label = ttk.Label(master = window, text = "Pokemon Breeding Probability", font = "Calibri 24")
+title_label = ttk.Label(master = window, text = "Pokemon HP Probability", font = "Calibri 24")
 title_label.pack()
 
 Parent_1_frame = ttk.Frame(master = window)
