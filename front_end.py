@@ -16,6 +16,7 @@ def Find_HP():
         shiny_rate = 8192
     else:
         shiny_rate = 1
+    shiny_rate = 1
     total = array_total_2d(data_set,0)
     total = 5242880/8
     nature_options = ["ALL","SPECIFIC","GENERAL","NEUTRAL"]
