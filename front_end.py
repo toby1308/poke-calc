@@ -12,6 +12,10 @@ def Find_HP():
     data_set = HP_from_parents(P1,P2,req_stats)
     string = ""
     spacing = "        "
+    if SH_string.get() == "Yes":
+        shiny_rate = 8192
+    else:
+        shiny_rate = 1
     total = array_total_2d(data_set,0)
     total = 5242880/8
     nature_options = ["ALL","SPECIFIC","GENERAL","NEUTRAL"]
@@ -34,13 +38,13 @@ def Find_HP():
     
     if HP_string.get() == "All":
         for i in range(len(data_set)):
-            string = string + type_arr[i] + spacing[len(type_arr[i]):] + ": " + str(data_set[i][0] / total) + ": " + str((data_set[i][1] * nature_prob)/total) + "\n"
+            string = string + type_arr[i] + spacing[len(type_arr[i]):] + ": " + str(data_set[i][0] / total) + ": " + str((data_set[i][1] * nature_prob)/(total * shiny_rate)) + "\n"
 
     else:
         for i in range(len(data_set)):
             if type_arr[i] == HP_string.get():
-                string = string + type_arr[i] + spacing[len(type_arr[i]):] + ": " + str(data_set[i][0] / total) + ": " + str((data_set[i][1] * nature_prob)/total) + "\n"
-                string = string + "Average encounter rate: " + str(total/(data_set[i][1]*nature_prob))
+                string = string + type_arr[i] + spacing[len(type_arr[i]):] + ": " + str(data_set[i][0] / total) + ": " + str((data_set[i][1] * nature_prob)/(total * shiny_rate)) + "\n"
+                string = string + "Average encounter rate: " + str((total * shiny_rate)/(data_set[i][1]*nature_prob))
 
     OP_Label["text"] = string
         
@@ -67,6 +71,7 @@ Calculat_frame = ttk.Frame(master = window)
 Threshold_frame = ttk.Frame(master = window)
 Natures_frame = ttk.Frame(master = dropdown_frame)
 EV_stone_frame = ttk.Frame(master = dropdown_frame)
+Shiny_pk_frame = ttk.Frame(master = dropdown_frame)
 
 
 P1_frame_label = ttk.Label(master = Parent_1_frame, text = "Father")
@@ -76,6 +81,7 @@ NA_frame_label = ttk.Label(master = Natures_frame, text = "Natures & Hidden Powe
 HS_frame_label = ttk.Label(master = Natures_frame, text = "Hidden Power:")
 ES_frame_label = ttk.Label(master = EV_stone_frame, text = "Everstone (Emerald Only):")
 TH_frame_label = ttk.Label(master = Threshold_frame, text = "IV Min:")
+SH_frame_label = ttk.Label(master = Shiny_pk_frame, text = "Shiny:")
 
 HP_label = ttk.Label(master = IV_title_frame, text = "HP: ")
 ATK_label = ttk.Label(master = IV_title_frame, text = "ATK: ")
@@ -107,6 +113,7 @@ TH_SPD_INT = tk.IntVar()
 Natures_string = tk.StringVar()
 HP_string = tk.StringVar()
 ES_string = tk.StringVar()
+SH_string = tk.StringVar()
 
 HP1 = ttk.Entry(master = Parent_1_frame,  textvariable = HP1INT)
 HP2 = ttk.Entry(master = Parent_2_frame, textvariable = HP2INT)
@@ -133,6 +140,8 @@ HP_selection = ttk.Combobox(master = Natures_frame, textvariable = HP_string)
 HP_selection['values'] = ["All","Fighting","Flying","Poision","Ground","Rock","Bug","Ghost","Steel","Fire","Water","Grass","Electric","Psychic","Ice","Dragon","Dark"]
 ES_selection = ttk.Combobox(master = EV_stone_frame, textvariable = ES_string)
 ES_selection['values'] = ["Yes","No"]
+SH_selection = ttk.Combobox(master = Shiny_pk_frame, textvariable = SH_string)
+SH_selection['values'] = ["Yes","No"]
 Calculate = ttk.Button(master = Calculat_frame, text = "Calculate", command = Find_HP)
 Calculate.pack()
 
@@ -150,6 +159,7 @@ SATK_label.pack(pady = 2)
 SDEF_label.pack(pady = 2)
 SPD_label.pack(pady = 2)
 OP_Label.pack(side = "right")
+SH_frame_label.pack()
 TH_frame_label.pack(pady = 5)
 
 
@@ -177,6 +187,7 @@ dropdown_frame.pack(side = "top")
 Natures.pack(side = "left", padx = 2)
 HP_selection.pack(side = "left", padx =2)
 ES_selection.pack(side = "right")
+SH_selection.pack()
 Calculat_frame.pack(side = "top")
 Natures_frame.pack(side = "top", pady = 5)
 IV_title_frame.pack(side = "left", padx = 5)
@@ -184,6 +195,7 @@ Parent_1_frame.pack(side = "left", padx = 5)
 Parent_2_frame.pack(side = "left", padx = 5)
 HPOutput_frame.pack(side = "right",padx = 5)
 EV_stone_frame.pack(side = "bottom",padx = 5)
+#Shiny_pk_frame.pack(side = "right",padx = 5)
 Threshold_frame.pack(side = "left")
 
 window.mainloop()
